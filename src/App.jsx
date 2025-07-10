@@ -20,25 +20,33 @@ function App() {
 
   useEffect(()=>{
     const preData = sessionStorage.getItem('userData')
-    // console.log('PRE',preData)
+    //console.log('PRE',JSON.parse(preData))
     if(preData){
       setData(JSON.parse(preData))
     }
   },[])
   
   
-  function handleChange(e){
+  async function handleChange(e){
     const field = e.target.name;
     const val = e.target.value
     // console.log('field',field)
     // console.log('value',val)
-    setData((prev)=>{
-      return{
-        ...prev,
-        [field]:val
-      }
-    })
-    sessionStorage.setItem('userData',JSON.stringify(data))
+    const obj={
+      ...data,
+      [field]:val
+    }
+
+    console.log('obj',obj)
+    // setData((prev)=>{
+    //   return{
+    //     ...prev,
+    //     [field]:val
+    //   }
+    // })
+
+    setData(obj)
+    sessionStorage.setItem('userData',JSON.stringify(obj))
     // console.log("data after set",data)
     
   }
