@@ -17,9 +17,14 @@ function App() {
   const team = useSelector((state)=>state.team)
   const teamData = useSelector((state)=>state.teamData)
   const playerId = useSelector((state)=>state.playerCount)
-  // useEffect(()=>{
-  //   console.log('teamData',teamData)
-  // },[teamData])
+
+  useEffect(()=>{
+    const preData = sessionStorage.getItem('userData')
+    // console.log('PRE',preData)
+    if(preData){
+      setData(JSON.parse(preData))
+    }
+  },[])
   
   
   function handleChange(e){
@@ -33,6 +38,7 @@ function App() {
         [field]:val
       }
     })
+    sessionStorage.setItem('userData',JSON.stringify(data))
     // console.log("data after set",data)
     
   }
