@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
+import { use, useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import { useSelector, useDispatch } from 'react-redux'
-import { addPlayer,shiftToTeam,shiftToAll} from './Redux/playerSlice'
+import { addPlayer,shiftToTeam,shiftToAll,sort} from './Redux/playerSlice'
 import { nanoid } from '@reduxjs/toolkit'
 
 
@@ -13,21 +13,53 @@ function App() {
   const[curTeamPLayer,setCurTeamPLayer] = useState()
 
   const dispatch = useDispatch()
-  const allPlayers = useSelector((state)=>state.allPlayers)
+  const allPlayers =[...useSelector((state)=>state.allPlayers)] 
+  // let all = [...allPlayers]
   const team = useSelector((state)=>state.team)
+  // let tm = [...team]
   const teamData = useSelector((state)=>state.teamData)
   const playerId = useSelector((state)=>state.playerCount)
+  const [sortinfo,setSortinfo]=useState({t1:"",t2:""})
+
+   
 
   useEffect(()=>{
+    // console.log("inside useEffect")
     const preData = sessionStorage.getItem('userData')
     //console.log('PRE',JSON.parse(preData))
     if(preData){
       setData(JSON.parse(preData))
     }
   },[])
+
+  // useEffect(()=>{
+    
+  //   switch(sortinfo.t1){
+  //     case 'id':
+  //       console.log("inside t1 id sort")
+  //       all.sort((a,b)=>a.id-b.id)
+  //       break;
+  //     case 'name':
+  //       console.log("inside t1 name sort")
+  //       all.sort((a,b)=>a.name.localeCompare(b.name))
+  //       console.log("all after sort",all)
+  //     default:
+  //       all=[...allPlayers]
+  //   }
+
+  //   switch(sortinfo.t2){
+  //     case 'id':
+  //       tm.sort((a,b)=>a.id-b.id)
+  //       break;
+  //     case 'name':
+  //       tm.sort((a,b)=>a.name.localeCompare(b.name))
+  //     default:
+  //       tm=[...team]
+  //   }
+  // },[allPlayers,team,sortinfo])
   
   
-  async function handleChange(e){
+  function handleChange(e){
     const field = e.target.name;
     const val = e.target.value
     // console.log('field',field)
@@ -37,7 +69,7 @@ function App() {
       [field]:val
     }
 
-    console.log('obj',obj)
+    //console.log('obj',obj)
     // setData((prev)=>{
     //   return{
     //     ...prev,
@@ -51,13 +83,25 @@ function App() {
     
   }
 
+  function handleSort(e){
+    if(e.target.name=='table1'){
+      dispatch(sort({t1:e.target.value}))
+    }else{
+      dispatch(sort({t2:e.target.value}))
+    }
+  }
+
   function handleSubmit(e){
     e.preventDefault()
     const id = playerId+1
     data.id=id
-     console.log('data',data)
+     //console.log('data',data)
     dispatch(addPlayer(data))
+    setData({name:'',skill:'batsman'})
+    sessionStorage.setItem('userData','')
   }
+
+
 
   function isValid(d){
     // console.log("inside isValid d.skill:",d.skill)
@@ -107,6 +151,8 @@ function App() {
           Team
         </div>
          </div>
+      
+      
 
       <div id='tables'>
 
@@ -132,6 +178,14 @@ function App() {
         </div>
 
         <div id='buttons'>
+         
+          <div>
+            Sort T1:
+          <select name='table1' className='sortOptions'  onChange={handleSort} >
+            <option value='id' >ID</option>
+            <option value='name' >Name</option>
+          </select>
+        </div>
           <button disabled={curAllPLayer?false:true} onClick={()=>{
             if(curAllPLayer && curAllPLayer.id && isValid(curAllPLayer)){
               dispatch(shiftToTeam(curAllPLayer))
@@ -148,6 +202,14 @@ function App() {
           }}>
             {'<'}
           </button>
+          <div>
+            Sort T2
+            :
+          <select className='sortOptions' onChange={handleSort}>
+            <option value='id' >ID</option>
+            <option value='name' >Name</option>
+          </select>
+        </div>
         </div>
 
         <div id='team'>

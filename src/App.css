@@ -36,7 +36,7 @@
 #heading{
   /* border: 1px solid green; */
   margin-top: 50px;
-  height: 50px;
+  height: 60px;
   width: 100%;
   display: flex;
   justify-content: space-around;
@@ -76,10 +76,11 @@
 #buttons{
   /* border: 1px solid red; */
   width: 20%;
-  height: 100px;
+  height: 200px;
   display: flex;
   align-items: center;
   justify-content: space-around;
+  flex-direction: column;
 }
 
 #team{
@@ -113,4 +114,8 @@
   display: flex;
   align-items: center;
   justify-content: space-around;
+}
+
+#sortOptions{
+  width: 5px;
 }
